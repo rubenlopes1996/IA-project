@@ -49,53 +49,61 @@ public class SnakeAdhocAgent extends SnakeAgent {
         //todo FAZER IF PARA FOOD PARA WALL
 
         Action action = null;
+        Action lastAction = null;
 
-        if(w!=null){
-            if (w.hastFood()) {
+        if (w != null) {
+            if (w.hasFood()) {
                 w.setFood(null);
                 return Action.WEST;
             }
         }
 
-        if(n!=null) {
-            if (n.hastFood()) {
+        if (n != null) {
+            if (n.hasFood()) {
                 n.setFood(null);
                 return Action.NORTH;
             }
         }
 
-        if(e!=null) {
-            if (e.hastFood()) {
+        if (e != null) {
+            if (e.hasFood()) {
                 e.setFood(null);
                 return Action.EAST;
             }
         }
 
-        if(s!=null) {
-            if (s.hastFood()) {
+        if (s != null) {
+            if (s.hasFood()) {
                 s.setFood(null);
                 return Action.SOUTH;
             }
         }
 
-        if(w != null && !w.hasWall() ){
+        if (w != null && !w.hasWall() && !w.hasAgent() && lastAction != Action.EAST) {
             action = Action.WEST;
+            lastAction = Action.WEST;
         }
 
 
-        if(n != null && !n.hasWall() ){
+        if (n != null && !n.hasWall() && !n.hasAgent() && lastAction != Action.SOUTH) {
             action = Action.NORTH;
+            lastAction = Action.NORTH;
+
         }
 
 
-        if(e != null && !e.hasWall() ){
+        if (e != null && !e.hasWall() && !e.hasAgent() && lastAction != Action.WEST) {
             action = Action.EAST;
+            lastAction = Action.EAST;
+
         }
 
 
-        if(s != null && !s.hasWall() ){
+        if (s != null && !s.hasWall() && !s.hasAgent() && lastAction != Action.NORTH) {
             action = Action.SOUTH;
+            lastAction = Action.SOUTH;
         }
+
         return action;
     }
 

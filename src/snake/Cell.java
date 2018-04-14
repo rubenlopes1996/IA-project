@@ -39,13 +39,13 @@ public class Cell {
 
     public void setFood(Food food) { this.food = food; }
 
-    public boolean hastFood() { return food != null; }
+    public boolean hasFood() { return food != null; }
 
 
     public Color getColor() {
         if (hasAgent()) {
             return agent.getColor();
-        } else if (hastFood()) {
+        } else if (hasFood()) {
             return food.getColor();
         } else if(hasWall()) {
             return wall.getColor();
