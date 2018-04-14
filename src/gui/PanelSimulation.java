@@ -2,11 +2,8 @@ package gui;
 
 import snake.Environment;
 import snake.EnvironmentListener;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -20,11 +17,15 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
     public static final int PANEL_SIZE = 250;
     public static final int CELL_SIZE = 20;
     public static final int GRID_TO_PANEL_GAP = 20;
+    private static final int MAX_ITERATIONS = 200; // todo modify to change the number of iterations
+    private static final int SIZE = 10;
+
     MainFrame mainFrame;
     private Environment environment;
     private Image image;
     JPanel environmentPanel = new JPanel();
     final JButton buttonSimulate = new JButton("Simulate");
+
 
     public PanelSimulation(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
@@ -49,6 +50,25 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
     }
 
     public void jButtonSimulate_actionPerformed(ActionEvent e) {
+        environment = new Environment(SIZE, MAX_ITERATIONS);
+        environment.addEnvironmentListener(this);
+
+        buildImage(environment);
+
+        SwingWorker worker = new SwingWorker<Void, Void>() {
+            public Void doInBackground() {
+                environmentUpdated();
+                try {
+                    environment.run();
+                }catch(Exception e1) {
+                    e1.printStackTrace();
+                }return null;
+            }
+        };
+        worker.execute();
+    }
+
+   /* public void jButtonSimulate_actionPerformed(ActionEvent e) {
 
         environment = mainFrame.getProblem().getEnvironment();
         environment.addEnvironmentListener(this);
@@ -81,7 +101,7 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
             }
         };
         worker.execute();
-    }
+    }*/
 
     public void buildImage(Environment environment) {
         image = new BufferedImage(
@@ -132,5 +152,7 @@ class SimulationPanel_jButtonSimulate_actionAdapter implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         adaptee.jButtonSimulate_actionPerformed(e);
+
     }
 }
+

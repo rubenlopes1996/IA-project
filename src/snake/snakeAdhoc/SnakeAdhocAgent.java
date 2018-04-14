@@ -102,11 +102,11 @@ public class SnakeAdhocAgent extends SnakeAgent {
 
         if (action == Action.NORTH && cell.getLine() != 0) {
             nextCell = environment.getNorthCell(cell);
-        } else if (action == Action.SOUTH && cell.getLine() != environment.getNumLines() - 1) {
+        } else if (action == Action.SOUTH && cell.getLine() != environment.getSize() - 1) {
             nextCell = environment.getSouthCell(cell);
         } else if (action == Action.WEST && cell.getColumn() != 0) {
             nextCell = environment.getWestCell(cell);
-        } else if (action == Action.EAST && cell.getColumn() != environment.getNumColumns() - 1) {
+        } else if (action == Action.EAST && cell.getColumn() != environment.getSize() - 1) {
             nextCell = environment.getEastCell(cell);
         }
 

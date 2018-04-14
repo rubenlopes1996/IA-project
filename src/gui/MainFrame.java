@@ -43,6 +43,8 @@ public class MainFrame extends JFrame implements GAListener {
     private XYSeries seriesAverage;
     private SwingWorker<Void, Void> worker;
 
+
+
     private PanelSimulation simulationPanel;
 
     public MainFrame() {
@@ -141,6 +143,7 @@ public class MainFrame extends JFrame implements GAListener {
         this.getContentPane().add(globalPanel);
 
         pack();
+
     }
 
     public SnakeProblem getProblem() {

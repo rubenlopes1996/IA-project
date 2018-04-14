@@ -1,5 +1,6 @@
 package snake;
 
+import snake.snakeAdhoc.SnakeAdhocAgent;
 import snake.snakeRandom.SnakeRandomAgent;
 
 import java.awt.Color;
@@ -15,9 +16,7 @@ public class Environment {
     private Food food;
     private final int maxIterations;
 
-    public Environment(
-            int size,
-            int maxIterations) {
+    public Environment(int size, int maxIterations) {
 
         this.maxIterations = maxIterations;
 
@@ -30,7 +29,7 @@ public class Environment {
 
         this.agents = new ArrayList<>();
         this.random = new Random();
-        }
+    }
 
     public void initialize(int seed) {
         random.setSeed(seed);
@@ -42,7 +41,9 @@ public class Environment {
     // TODO MODIFY TO PLACE ADHOC OR AI SNAKE AGENTS
     private void placeAgents() {
         SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)), Color.GREEN);
+        SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)), Color.BLUE);
         agents.add(snakeRandomAgent);
+        agents.add(snakeAdhocAgent);
     }
 
     private void placeFood() {
@@ -50,16 +51,25 @@ public class Environment {
     }
 
     public void simulate() {
-        // TODO
+        // TODO mesmo metodo que o run que esta em baixo
 
         fireUpdatedEnvironment();
+    }
+
+    public void run() {
+        for (int i = 0; i < maxIterations; i++) {
+            for (SnakeAgent snakeAgent : agents) {
+                snakeAgent.act(this);
+                fireUpdatedEnvironment();
+            }
+        }
     }
 
     public int getSize() {
         return grid.length;
     }
 
-        public Cell getNorthCell(Cell cell) {
+    public Cell getNorthCell(Cell cell) {
         if (cell.getLine() > 0) {
             return grid[cell.getLine() - 1][cell.getColumn()];
         }
@@ -87,15 +97,6 @@ public class Environment {
         return null;
     }
 
-
-    public int getNumLines() {
-        return grid.length;
-    }
-
-    public int getNumColumns() {
-        return grid[0].length;
-    }
-
     public final Cell getCell(int linha, int coluna) {
         return grid[linha][coluna];
     }
@@ -103,6 +104,7 @@ public class Environment {
     public Color getCellColor(int linha, int coluna) {
         return grid[linha][coluna].getColor();
     }
+
 
     //listeners
     private final ArrayList<EnvironmentListener> listeners = new ArrayList<>();
