@@ -11,7 +11,8 @@ import java.util.Random;
 public class Environment {
 
     public Random random;
-    private final Cell[][] grid;
+    public final Cell[][] grid;
+    public Cell cell;
     private final List<SnakeAgent> agents;
     private Food food;
     private final int maxIterations;
@@ -29,6 +30,7 @@ public class Environment {
 
         this.agents = new ArrayList<>();
         this.random = new Random();
+        initialize(random.nextInt(10));
     }
 
     public void initialize(int seed) {
@@ -41,22 +43,16 @@ public class Environment {
     // TODO MODIFY TO PLACE ADHOC OR AI SNAKE AGENTS
     private void placeAgents() {
         SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)), Color.GREEN);
-        SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)), Color.BLUE);
+        SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(2, 2), Color.BLUE);
         agents.add(snakeRandomAgent);
         agents.add(snakeAdhocAgent);
     }
 
     private void placeFood() {
-        // TODO
+        Food food = new Food(new Cell(1, 1)); //falta verificar se essa posição não é ocupada pela cobra
     }
 
     public void simulate() {
-        // TODO mesmo metodo que o run que esta em baixo
-
-        fireUpdatedEnvironment();
-    }
-
-    public void run() {
         for (int i = 0; i < maxIterations; i++) {
             for (SnakeAgent snakeAgent : agents) {
                 snakeAgent.act(this);

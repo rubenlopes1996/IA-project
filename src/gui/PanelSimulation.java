@@ -59,7 +59,7 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
             public Void doInBackground() {
                 environmentUpdated();
                 try {
-                    environment.run();
+                    environment.simulate();
                 }catch(Exception e1) {
                     e1.printStackTrace();
                 }return null;

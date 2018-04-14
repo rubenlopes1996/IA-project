@@ -1,9 +1,12 @@
 package snake;
 
-import javafx.scene.paint.Color;
+import java.awt.*;
 
 public class Wall {
-    public Color getColor(){
-        return Color.BLUE;
+    public static final Color COLOR = Color.BLUE;
+
+
+    public Color getColor() {
+        return COLOR;
     }
 }

@@ -27,6 +27,10 @@ public class SnakeAdhocAgent extends SnakeAgent {
         this.cell.setAgent(this);
     }
 
+    public Color getColor() {
+        return Color.BLACK;
+    }
+
     public Perception buildPerception(Environment environment) {
         return new Perception(
                 environment.getNorthCell(cell),
@@ -36,7 +40,7 @@ public class SnakeAdhocAgent extends SnakeAgent {
     }
 
     public Action decide(Perception perception) {
-        // todo modify to improve the ReactiveAgent's decision process
+        // todo modify to improve the SnakeAdhocAgent decision process
         Cell w = perception.getW();
         Cell n = perception.getN();
         Cell e = perception.getE();
@@ -45,7 +49,6 @@ public class SnakeAdhocAgent extends SnakeAgent {
         //todo FAZER IF PARA FOOD PARA WALL
 
         Action action = null;
-        int minNumVisited = Integer.MAX_VALUE;
 
         if(w!=null){
             if (w.hastFood()) {
@@ -75,22 +78,22 @@ public class SnakeAdhocAgent extends SnakeAgent {
             }
         }
 
-        if(w != null && !w.hasWall() && !w.hasAgent() ){
+        if(w != null && !w.hasWall() ){
             action = Action.WEST;
         }
 
 
-        if(n != null && !n.hasWall() && !n.hasAgent() ){
+        if(n != null && !n.hasWall() ){
             action = Action.NORTH;
         }
 
 
-        if(e != null && !e.hasWall() && !e.hasAgent() ){
+        if(e != null && !e.hasWall() ){
             action = Action.EAST;
         }
 
 
-        if(s != null && !s.hasWall() && !s.hasAgent()){
+        if(s != null && !s.hasWall() ){
             action = Action.SOUTH;
         }
         return action;

@@ -3,7 +3,7 @@ package snake;
 import java.awt.Color;
 
 public class Cell {
-    public static final Color COLOR = Color.WHITE;
+    public static final Color COLOR = Color.GREEN;
 
     private final int line, column;
     private SnakeAgent agent;
@@ -41,14 +41,16 @@ public class Cell {
 
     public boolean hastFood() { return food != null; }
 
+
     public Color getColor() {
         if (hasAgent()) {
             return agent.getColor();
         } else if (hastFood()) {
             return food.getColor();
-        } else {
-            return Cell.COLOR;
+        } else if(hasWall()) {
+            return wall.getColor();
         }
+        return Cell.COLOR;
     }
     public boolean hasWall(){
         return wall != null;
