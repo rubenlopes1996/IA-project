@@ -39,7 +39,6 @@ public class Environment {
         placeFood();
     }
 
-    // TODO MODIFY TO PLACE ADHOC OR AI SNAKE AGENTS
     private void placeAgents() {
         SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(2, 2), Color.BLUE);
         SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(8, 2), Color.BLUE);
@@ -56,6 +55,9 @@ public class Environment {
             for (SnakeAgent snakeAgent : agents) {
                 snakeAgent.act(this);
                 fireUpdatedEnvironment();
+                if(getFood() == true){
+                    placeFood();
+                }
             }
         }
     }
@@ -98,6 +100,16 @@ public class Environment {
 
     public Color getCellColor(int linha, int coluna) {
         return grid[linha][coluna].getColor();
+    }
+
+    public boolean getFood(){
+        for (SnakeAgent snakeAgent : agents) {
+            if (snakeAgent.getCell() == food.getCell()) {
+                this.food = null;
+                return true;
+            }
+        }
+        return false;
     }
 
 

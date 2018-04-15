@@ -45,4 +45,6 @@ public abstract class SnakeAgent {
     public Color getColor() {
         return color;
     }
+
+
 }
