@@ -9,6 +9,8 @@ public class Cell {
     private SnakeAgent agent;
     private Food food;
     private Wall wall;
+    private int numVisited;
+
 
     public Cell(int line, int column) {
         this.line = line;
@@ -65,4 +67,10 @@ public class Cell {
     }
 
 
+    public int getNumVisited() {
+        return numVisited;
+    }
+    public void incrementNumVisited(){
+        this.numVisited+=1;
+    }
 }

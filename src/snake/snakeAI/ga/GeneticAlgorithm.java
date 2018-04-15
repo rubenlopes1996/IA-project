@@ -1,5 +1,6 @@
 package snake.snakeAI.ga;
 
+import snake.SnakeAgent;
 import snake.snakeAI.ga.geneticOperators.Mutation;
 import snake.snakeAI.ga.geneticOperators.Recombination;
 import snake.snakeAI.ga.selectionMethods.SelectionMethod;

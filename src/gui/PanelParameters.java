@@ -1,9 +1,13 @@
 package gui;
 
+import snake.Cell;
+import snake.SnakeAgent;
 import snake.snakeAI.ga.geneticOperators.*;
 import snake.snakeAI.ga.selectionMethods.RouletteWheel;
 import snake.snakeAI.ga.selectionMethods.SelectionMethod;
 import snake.snakeAI.ga.selectionMethods.Tournament;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -13,6 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import snake.snakeAI.SnakeIndividual;
 import snake.snakeAI.SnakeProblem;
+import snake.snakeAI.nn.SnakeAIAgent;
+import snake.snakeAdhoc.SnakeAdhocAgent;
+import snake.snakeRandom.SnakeRandomAgent;
 
 public class PanelParameters extends PanelAtributesValue {
 
@@ -89,6 +96,21 @@ public class PanelParameters extends PanelAtributesValue {
                         Integer.parseInt(textFieldN.getText()));
 
         }
+        return null;
+    }
+
+    public SnakeAgent getTypeSnakeAgent(){
+        switch (comboBoxSelectionMethods.getSelectedIndex()){
+            case 0:
+                return new SnakeRandomAgent(new Cell(2,2),Color.BLUE);
+
+            case 1:
+                return new SnakeAdhocAgent(new Cell(2,2),Color.CYAN);
+
+            case 2:
+                return new SnakeAIAgent(new Cell(2,2),2,2,2);
+        }
+
         return null;
     }
 

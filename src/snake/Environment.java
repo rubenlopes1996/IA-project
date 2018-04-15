@@ -13,6 +13,7 @@ public class Environment {
     public Random random;
     public final Cell[][] grid;
     private final List<SnakeAgent> agents;
+    private Food food;
     private final int maxIterations;
 
     public Environment(int size, int maxIterations) {
@@ -40,15 +41,14 @@ public class Environment {
 
     // TODO MODIFY TO PLACE ADHOC OR AI SNAKE AGENTS
     private void placeAgents() {
-        SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)), Color.GREEN);
+        SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(2, 2), Color.BLUE);
         SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(8, 2), Color.BLUE);
         agents.add(snakeRandomAgent);
         agents.add(snakeAdhocAgent);
     }
 
     private void placeFood() {
-        Food food = new Food(new Cell(1, 1)); //falta verificar se essa posição não é ocupada pela cobra
-        food.setCell(new Cell(1,2));
+        this.food = new Food(getCell(random.nextInt(10),random.nextInt(10))); //falta verificar se essa posição não é ocupada pela cobra e tornar aleatoria a posição da comida
     }
 
     public void simulate() {

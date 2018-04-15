@@ -25,6 +25,8 @@ public class SnakeAdhocAgent extends SnakeAgent {
         this.cell.setAgent(null);
         this.cell = cell;
         this.cell.setAgent(this);
+        this.cell.incrementNumVisited();
+
     }
 
     public Color getColor() {
@@ -46,10 +48,12 @@ public class SnakeAdhocAgent extends SnakeAgent {
         Cell e = perception.getE();
         Cell s = perception.getS();
 
-        //todo FAZER IF PARA FOOD PARA WALL
+        //todo FAZER IF PARA FOOD e WALL
 
         Action action = null;
         Action lastAction = null;
+        int minNumVisited = Integer.MAX_VALUE;
+
 
         if (w != null) {
             if (w.hasFood()) {
@@ -78,7 +82,7 @@ public class SnakeAdhocAgent extends SnakeAgent {
                 return Action.SOUTH;
             }
         }
-
+/*
         if (w != null && !w.hasWall() && !w.hasAgent() && lastAction != Action.EAST) {
             action = Action.WEST;
             lastAction = Action.WEST;
@@ -104,6 +108,38 @@ public class SnakeAdhocAgent extends SnakeAgent {
             lastAction = Action.SOUTH;
         }
 
+        return action*/
+
+        if(w != null && !w.hasWall() && !w.hasAgent() ){
+            if(w.getNumVisited()<minNumVisited){
+                minNumVisited = w.getNumVisited();
+                action = Action.WEST;
+            }
+        }
+
+
+        if(n != null && !n.hasWall() && !n.hasAgent() ){
+            if(n.getNumVisited()<minNumVisited){
+                minNumVisited = n.getNumVisited();
+                action = Action.NORTH;
+            }
+        }
+
+
+        if(e != null && !e.hasWall() && !e.hasAgent() ){
+            if(e.getNumVisited()<minNumVisited){
+                minNumVisited = e.getNumVisited();
+                action = Action.EAST;
+            }
+        }
+
+
+        if(s != null && !s.hasWall() && !s.hasAgent()){
+            if(s.getNumVisited()<minNumVisited){
+                minNumVisited = s.getNumVisited();
+                action = Action.SOUTH;
+            }
+        }
         return action;
     }
 
