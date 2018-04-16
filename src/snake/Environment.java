@@ -40,14 +40,14 @@ public class Environment {
     }
 
     private void placeAgents() {
-        SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(2, 2), Color.BLUE);
-        SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(8, 2), Color.BLUE);
+        SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(2, 2), Color.BLUE, 1);
+        //SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(2, 2), Color.BLUE, 1);
         agents.add(snakeRandomAgent);
-        agents.add(snakeAdhocAgent);
+        //agents.add(snakeAdhocAgent);
     }
 
     private void placeFood() {
-        this.food = new Food(getCell(random.nextInt(10),random.nextInt(10))); //falta verificar se essa posição não é ocupada pela cobra e tornar aleatoria a posição da comida
+        this.food = new Food(getCell(random.nextInt(10), random.nextInt(10))); //falta verificar se essa posição não é ocupada pela cobra e tornar aleatoria a posição da comida
     }
 
     public void simulate() {
@@ -55,11 +55,12 @@ public class Environment {
             for (SnakeAgent snakeAgent : agents) {
                 snakeAgent.act(this);
                 fireUpdatedEnvironment();
-                if(getFood() == true){
+                if (getFood()) {
                     placeFood();
                 }
             }
         }
+
     }
 
     public int getSize() {
@@ -102,7 +103,7 @@ public class Environment {
         return grid[linha][coluna].getColor();
     }
 
-    public boolean getFood(){
+    public boolean getFood() {
         for (SnakeAgent snakeAgent : agents) {
             if (snakeAgent.getCell() == food.getCell()) {
                 this.food = null;
