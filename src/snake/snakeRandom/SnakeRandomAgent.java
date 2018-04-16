@@ -6,18 +6,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class SnakeRandomAgent extends SnakeAgent {
-    // TODO
-
     public SnakeRandomAgent(Cell cell, Color color, int size) {
         super(cell, color, size);
-    }
-
-    public Perception buildPerception(Environment environment) {
-        return new Perception(
-                environment.getNorthCell(cell),
-                environment.getSouthCell(cell),
-                environment.getEastCell(cell),
-                environment.getWestCell(cell));
     }
 
     @Override //o Action que ele devolve é uma direção random

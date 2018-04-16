@@ -25,13 +25,16 @@ public abstract class SnakeAgent {
 
     protected Perception buildPerception(Environment environment) {
         // TODO
+        return new Perception(
+                environment.getNorthCell(cell),
+                environment.getSouthCell(cell),
+                environment.getEastCell(cell),
+                environment.getWestCell(cell));
 
-        return null;
     }
 
     protected void execute(Action action, Environment environment) {
         // TODO
-
         Cell nextCell = null;
 
         if (action == Action.NORTH && cell.getLine() != 0) {

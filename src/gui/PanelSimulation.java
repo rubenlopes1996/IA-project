@@ -17,7 +17,7 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
     public static final int PANEL_SIZE = 250;
     public static final int CELL_SIZE = 20;
     public static final int GRID_TO_PANEL_GAP = 20;
-    private static final int MAX_ITERATIONS = 200; // todo modify to change the number of iterations
+    private static final int MAX_ITERATIONS = 500; // todo modify to change the number of iterations
     private static final int SIZE = 10;
 
     MainFrame mainFrame;

@@ -41,9 +41,9 @@ public class Environment {
 
     private void placeAgents() {
         SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(2, 2), Color.BLUE, 1);
-        //SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(2, 2), Color.BLUE, 1);
+        SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(2, 2), Color.BLUE, 1);
         agents.add(snakeRandomAgent);
-        //agents.add(snakeAdhocAgent);
+        agents.add(snakeAdhocAgent);
     }
 
     private void placeFood() {
@@ -51,6 +51,15 @@ public class Environment {
     }
 
     public void simulate() {
+       if(agents.size() == 1){
+           simulateSnkae(maxIterations);
+       }else if(agents.size() == 2){
+           simulateSnkae(300);
+       }
+
+    }
+
+    public void simulateSnkae(int maxIterations) {
         for (int i = 0; i < maxIterations; i++) {
             for (SnakeAgent snakeAgent : agents) {
                 snakeAgent.act(this);
@@ -60,7 +69,6 @@ public class Environment {
                 }
             }
         }
-
     }
 
     public int getSize() {

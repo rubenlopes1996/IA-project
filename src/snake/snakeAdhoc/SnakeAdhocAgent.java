@@ -33,14 +33,6 @@ public class SnakeAdhocAgent extends SnakeAgent {
         return Color.BLACK;
     }
 
-    public Perception buildPerception(Environment environment) {
-        return new Perception(
-                environment.getNorthCell(cell),
-                environment.getSouthCell(cell),
-                environment.getEastCell(cell),
-                environment.getWestCell(cell));
-    }
-
     public Action decide(Perception perception) {
         // todo modify to improve the SnakeAdhocAgent decision process
         Cell w = perception.getW();
