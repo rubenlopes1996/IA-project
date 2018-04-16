@@ -40,10 +40,7 @@ public class SnakeAdhocAgent extends SnakeAgent {
         Cell e = perception.getE();
         Cell s = perception.getS();
 
-        //todo FAZER IF PARA FOOD e WALL
-
         Action action = null;
-        Action lastAction = null;
         int minNumVisited = Integer.MAX_VALUE;
 
 
@@ -74,8 +71,8 @@ public class SnakeAdhocAgent extends SnakeAgent {
                 return Action.SOUTH;
             }
         }
-/*
-        if (w != null && !w.hasWall() && !w.hasAgent() && lastAction != Action.EAST) {
+
+        /*if (w != null && !w.hasWall() && !w.hasAgent() && lastAction != Action.EAST) {
             action = Action.WEST;
             lastAction = Action.WEST;
         }
@@ -100,7 +97,7 @@ public class SnakeAdhocAgent extends SnakeAgent {
             lastAction = Action.SOUTH;
         }
 
-        return action*/
+        return action;*/
 
         if(w != null && !w.hasWall() && !w.hasAgent() ){
             if(w.getNumVisited()<minNumVisited){

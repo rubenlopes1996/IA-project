@@ -25,4 +25,5 @@ public class Perception {
     public Cell getS() {
         return s;
     }
+
 }

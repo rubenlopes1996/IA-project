@@ -15,7 +15,7 @@ public class SnakeRandomAgent extends SnakeAgent {
         Random random = new Random();
         Action action;
 
-        // todo modify to improve the SnakeAdhocAgent decision process
+        // todo modify to improve the SnakeRandomAgent decision process
         Cell w = perception.getW();
         Cell n = perception.getN();
         Cell e = perception.getE();
