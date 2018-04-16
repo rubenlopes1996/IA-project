@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class SnakeAdhocAgent extends SnakeAgent {
 
-    public SnakeAdhocAgent(Cell cell, Color color) {
-        super(cell, color);
+    public SnakeAdhocAgent(Cell cell, Color color,int size) {
+        super(cell, color,size);
     }
 
     public void act(Environment environment) {
@@ -142,26 +142,5 @@ public class SnakeAdhocAgent extends SnakeAgent {
         }
         return action;
     }
-
-    public void execute(Action action, Environment environment) {
-
-        Cell nextCell = null;
-
-        if (action == Action.NORTH && cell.getLine() != 0) {
-            nextCell = environment.getNorthCell(cell);
-        } else if (action == Action.SOUTH && cell.getLine() != environment.getSize() - 1) {
-            nextCell = environment.getSouthCell(cell);
-        } else if (action == Action.WEST && cell.getColumn() != 0) {
-            nextCell = environment.getWestCell(cell);
-        } else if (action == Action.EAST && cell.getColumn() != environment.getSize() - 1) {
-            nextCell = environment.getEastCell(cell);
-        }
-
-        if (nextCell != null && !nextCell.hasWall() && !nextCell.hasAgent()) {
-            setCell(nextCell);
-        }
-    }
-
-
 
 }

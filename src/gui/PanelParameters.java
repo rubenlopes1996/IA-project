@@ -102,13 +102,13 @@ public class PanelParameters extends PanelAtributesValue {
     public SnakeAgent getTypeSnakeAgent(){
         switch (comboBoxSelectionMethods.getSelectedIndex()){
             case 0:
-                return new SnakeRandomAgent(new Cell(2,2),Color.BLUE);
+                return new SnakeRandomAgent(new Cell(2,2),Color.BLUE,1);
 
             case 1:
-                return new SnakeAdhocAgent(new Cell(2,2),Color.CYAN);
+                return new SnakeAdhocAgent(new Cell(2,2),Color.CYAN,1);
 
             case 2:
-                return new SnakeAIAgent(new Cell(2,2),2,2,2);
+                return new SnakeAIAgent(new Cell(2,2),2,2,2,1);
         }
 
         return null;
