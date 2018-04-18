@@ -8,13 +8,13 @@ public abstract class SnakeAgent {
     protected Color color;
     protected int size;
 
-    public SnakeAgent(Cell cell, Color color, int size) {
+    public SnakeAgent(Cell cell, Color color) {
         this.cell = cell;
         if (cell != null) {
             this.cell.setAgent(this);
         }
         this.color = color;
-        this.size = size;
+        this.size = 1;
     }
 
     public void act(Environment environment) {
@@ -29,7 +29,8 @@ public abstract class SnakeAgent {
                 environment.getNorthCell(cell),
                 environment.getSouthCell(cell),
                 environment.getEastCell(cell),
-                environment.getWestCell(cell));
+                environment.getWestCell(cell),
+                environment.getCell(cell.getLine(),cell.getColumn()).getFood());
 
     }
 
@@ -69,9 +70,12 @@ public abstract class SnakeAgent {
         }
     }
 
-    public Color getColor() {
+    public Color  getColor() {
         return color;
     }
 
+    public void sizeIncrement(){
+        size+=1;
+    }
 
 }

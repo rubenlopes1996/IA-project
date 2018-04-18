@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -99,22 +101,7 @@ public class PanelParameters extends PanelAtributesValue {
         return null;
     }
 
-    public SnakeAgent getTypeSnakeAgent(){
-        switch (comboBoxSelectionMethods.getSelectedIndex()){
-            case 0:
-                return new SnakeRandomAgent(new Cell(2,2),Color.BLUE,1);
-
-            case 1:
-                return new SnakeAdhocAgent(new Cell(2,2),Color.CYAN,1);
-
-            case 2:
-                return new SnakeAIAgent(new Cell(2,2),2,2,2,1);
-        }
-
-        return null;
-    }
-
-    public Recombination<SnakeIndividual> getRecombinationMethod() {
+        public Recombination<SnakeIndividual> getRecombinationMethod() {
 
         double recombinationProb = Double.parseDouble(textFieldProbRecombination.getText());
 

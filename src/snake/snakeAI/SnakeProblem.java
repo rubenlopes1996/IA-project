@@ -19,6 +19,7 @@ public class SnakeProblem implements Problem<SnakeIndividual> {
     final private int numHiddenUnits;
     final public int numOutputs;
     final private int numEnvironmentRuns;
+    int x;
 
     final private Environment environment;
 
@@ -36,7 +37,7 @@ public class SnakeProblem implements Problem<SnakeIndividual> {
 
         environment = new Environment(
                 environmentSize,
-                maxIterations);
+                maxIterations, x);
     }
 
     @Override

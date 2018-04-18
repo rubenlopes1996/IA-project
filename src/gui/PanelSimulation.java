@@ -1,16 +1,20 @@
 package gui;
 
+import snake.Cell;
 import snake.Environment;
 import snake.EnvironmentListener;
+import snake.SnakeAgent;
+import snake.snakeAI.nn.SnakeAIAgent;
+import snake.snakeAdhoc.SnakeAdhocAgent;
+import snake.snakeRandom.SnakeRandomAgent;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.SwingWorker;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
 
 public class PanelSimulation extends JPanel implements EnvironmentListener {
 
@@ -21,24 +25,29 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
     private static final int SIZE = 10;
 
     MainFrame mainFrame;
+    private PanelParameters panelParameters = new PanelParameters();
     private Environment environment;
     private Image image;
     JPanel environmentPanel = new JPanel();
     final JButton buttonSimulate = new JButton("Simulate");
+    String[] typeAgents = {"SnakeRandomAgent","SnakeAdHocAgent","SnakeAI","SnakeRandomAgent and SnakeAdHocAgent"};
+    JComboBox comboBoxSelectionTypeAgents = new JComboBox(typeAgents);
 
 
     public PanelSimulation(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         environmentPanel.setPreferredSize(new Dimension(PANEL_SIZE, PANEL_SIZE));
         setLayout(new BorderLayout());
-
         add(environmentPanel, java.awt.BorderLayout.NORTH);
         add(buttonSimulate, java.awt.BorderLayout.SOUTH);
         buttonSimulate.addActionListener(new SimulationPanel_jButtonSimulate_actionAdapter(this));
+        add(comboBoxSelectionTypeAgents,BorderLayout.EAST);
 
         setBorder(BorderFactory.createCompoundBorder(
+
                 BorderFactory.createTitledBorder(""),
                 BorderFactory.createEmptyBorder(1, 1, 1, 1)));
+
     }
 
     public void setEnvironment(Environment environment) {
@@ -50,7 +59,7 @@ public class PanelSimulation extends JPanel implements EnvironmentListener {
     }
 
     public void jButtonSimulate_actionPerformed(ActionEvent e) {
-        environment = new Environment(SIZE, MAX_ITERATIONS);
+        environment = new Environment(SIZE, MAX_ITERATIONS, comboBoxSelectionTypeAgents.getSelectedIndex());
         environment.addEnvironmentListener(this);
 
         buildImage(environment);

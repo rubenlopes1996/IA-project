@@ -35,13 +35,11 @@ public class SnakeAIAgent extends SnakeAgent {
             Cell cell,
             int inputLayerSize,
             int hiddenLayerSize,
-            int outputLayerSize,
-            int size) {
-        super(cell, Color.BLUE,size);
+            int outputLayerSize) {
+        super(cell, Color.PINK);
         this.inputLayerSize = inputLayerSize;
         this.hiddenLayerSize = hiddenLayerSize;
         this.outputLayerSize = outputLayerSize;
-        this.size = size;
         inputs = new int[inputLayerSize];
         inputs[inputs.length - 1] = -1; //bias entry
         w1 = new double[inputLayerSize][hiddenLayerSize]; // the bias entry for the hidden layer neurons is already counted in inputLayerSize variable
