@@ -20,6 +20,10 @@ public abstract class SnakeAgent {
         this.snakeBody = new ArrayList<>();
     }
 
+    public void growBody(){
+
+    }
+
     public void act(Environment environment) {
         Perception perception = buildPerception(environment);
         Action action = decide(perception);

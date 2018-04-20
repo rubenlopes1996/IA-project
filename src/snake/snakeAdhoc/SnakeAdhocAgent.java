@@ -39,6 +39,7 @@ public class SnakeAdhocAgent extends SnakeAgent {
         Cell n = perception.getN();
         Cell e = perception.getE();
         Cell s = perception.getS();
+        Cell food = perception.getFood();
 
         Action action = null;
         int minNumVisited = Integer.MAX_VALUE;

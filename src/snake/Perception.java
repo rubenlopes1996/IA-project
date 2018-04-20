@@ -28,4 +28,8 @@ public class Perception {
         return s;
     }
 
+    public Cell getFood(){
+        return food.getCell();
+    }
+
 }
