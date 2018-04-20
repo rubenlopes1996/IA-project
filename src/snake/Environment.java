@@ -1,8 +1,5 @@
 package snake;
 
-import gui.MainFrame;
-import gui.PanelParameters;
-import gui.PanelSimulation;
 import snake.snakeAI.nn.SnakeAIAgent;
 import snake.snakeAdhoc.SnakeAdhocAgent;
 import snake.snakeRandom.SnakeRandomAgent;
@@ -21,8 +18,7 @@ public class Environment {
     private final int maxIterations;
     private int option;
 
-
-    public Environment(int size, int maxIterations,int option) {
+    public Environment(int size, int maxIterations, int option) {
 
         this.maxIterations = maxIterations;
 
@@ -69,19 +65,19 @@ public class Environment {
     }
 
     private void placeFood() {
-        this.food = new Food(getCell(random.nextInt(10), random.nextInt(10))); //falta verificar se essa posição não é ocupada pela cobra e tornar aleatoria a posição da comida
+        this.food = new Food(getCell(random.nextInt(10), random.nextInt(10))); //falta verificar se essa posição não é ocupada pela cobra
     }
 
     public void simulate() {
         if (agents.size() == 1) {
-            simulateSnkae(maxIterations);
+            simulateSnake(maxIterations);
         } else if (agents.size() == 2) {
-            simulateSnkae(300);
+            simulateSnake(300);
         }
 
     }
 
-    public void simulateSnkae(int maxIterations) {
+    public void simulateSnake(int maxIterations) {
         for (int i = 0; i < maxIterations; i++) {
             for (SnakeAgent snakeAgent : agents) {
                 snakeAgent.act(this);
@@ -137,7 +133,6 @@ public class Environment {
         for (SnakeAgent snakeAgent : agents) {
             if (snakeAgent.getCell() == food.getCell()) {
                 this.food = null;
-                snakeAgent.sizeIncrement();
                 return true;
             }
         }

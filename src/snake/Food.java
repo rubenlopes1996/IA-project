@@ -21,6 +21,14 @@ public class Food {
         return cell;
     }
 
+    public int getLine(){
+        return cell.getLine();
+    }
+
+    public int getCollumn(){
+        return cell.getColumn();
+    }
+
     public void setCell(Cell cell) {
         if (this.cell != null)
             this.cell.setFood(null);

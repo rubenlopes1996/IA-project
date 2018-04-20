@@ -1,12 +1,15 @@
 package snake;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class SnakeAgent {
 
     protected Cell cell;
     protected Color color;
-    protected int size;
+    protected List<Cell> snakeBody;
 
     public SnakeAgent(Cell cell, Color color) {
         this.cell = cell;
@@ -14,7 +17,7 @@ public abstract class SnakeAgent {
             this.cell.setAgent(this);
         }
         this.color = color;
-        this.size = 1;
+        this.snakeBody = new ArrayList<>();
     }
 
     public void act(Environment environment) {
@@ -74,8 +77,5 @@ public abstract class SnakeAgent {
         return color;
     }
 
-    public void sizeIncrement(){
-        size+=1;
-    }
 
 }

@@ -6,7 +6,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class SnakeRandomAgent extends SnakeAgent {
-    public SnakeRandomAgent(Cell cell) {
+    public SnakeRandomAgent(Cell cell)
+    {
         super(cell,Color.BLUE);
     }
 
