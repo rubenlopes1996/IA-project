@@ -17,6 +17,7 @@ public class Environment {
     private Food food;
     private final int maxIterations;
     private int option;
+    private int size;
 
     public Environment(int size, int maxIterations, int option) {
 
