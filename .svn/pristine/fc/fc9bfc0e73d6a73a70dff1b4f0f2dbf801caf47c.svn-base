@@ -1,0 +1,86 @@
+package snake.snakeAI;
+
+import snake.*;
+import snake.snakeAI.ga.RealVectorIndividual;
+import snake.snakeAI.nn.SnakeAIAgent;
+
+public class SnakeIndividual extends RealVectorIndividual<SnakeProblem, SnakeIndividual> {
+    SnakeAIAgent snakeAIAgent = new SnakeAIAgent(new Cell(Environment.random.nextInt(10), Environment.random.nextInt(10)), 4,8,4);
+
+    public SnakeIndividual(SnakeProblem problem, int size /*TODO?*/) {
+        super(problem, size);
+        //TODO?
+    }
+
+    public SnakeIndividual(SnakeIndividual original) {
+        //TODO feito ?
+        super(original);
+
+    }
+    @Override
+    public double computeFitness() {
+        //TODO
+        double fitness = 0;
+        //double iteration = 0;
+        double numFood = 0;
+
+        for (int i = 0; i < problem.getNumEvironmentSimulations(); i++) {
+            fitness = 0;
+            snakeAIAgent.setWeights(getGenome());
+            snakeAIAgent.decide(snakeAIAgent.buildPerception(problem.getEnvironment()));
+            snakeAIAgent.forwardPropagation();
+            problem.getEnvironment().placeAI(snakeAIAgent);
+            problem.getEnvironment().simulateSnake(problem.getMaxIterations());
+            //iteration = problem.getEnvironment().getNumIteratiosnLiveSnake();
+            numFood = problem.getEnvironment().getFoodEaten();
+            fitness = 0.8 * numFood;
+        }
+
+        //para cada simulção (utilizar var de iteração com seed do random)
+            //ir ao genoma buscar os pesos da sinapses e coloca-los na RN(setWeights)
+            //mandar a snakeAi executar (decide)
+                //colocar os inputs com os valores percecionados
+                //mandar executar o forwardPropagation
+            //manda a cobra iterar o maximo x de vezes
+            //recolhe métricas(comida, iterações)
+        // atribuit e devolver a fitness
+            return fitness;
+    }
+
+    public double[] getGenome() {
+        //TODO
+        return genome;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nfitness: " + fitness);
+        return sb.toString();
+        //Todo
+    }
+
+    /**
+     * @param i
+     * @return 1 if this object is BETTER than i, -1 if it is WORST than I and
+     * 0, otherwise.
+     */
+
+    @Override
+    public int compareTo(SnakeIndividual i) {
+        //TODO feito?
+        if (i.getFitness() > this.getFitness()) {
+            return -1;
+        }
+        if(i.getFitness() < this.getFitness()) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public SnakeIndividual clone() {
+
+        return new SnakeIndividual(this);
+    }
+}

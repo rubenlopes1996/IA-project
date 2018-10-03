@@ -1,0 +1,21 @@
+package snake;
+
+import java.awt.*;
+
+public class Tail {
+    public static final Color COLOR = Color.RED;
+
+    private Cell cell;
+
+    public Tail(Cell cell) {
+        this.cell = cell;
+    }
+
+    public static Color getCOLOR() {
+        return COLOR;
+    }
+
+    public Cell getCell() {
+        return cell;
+    }
+}

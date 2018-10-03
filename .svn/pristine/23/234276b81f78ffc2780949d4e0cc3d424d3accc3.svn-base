@@ -1,0 +1,106 @@
+package snake;
+
+import java.awt.Color;
+
+public class Cell {
+    public static final Color COLOR = Color.GREEN;
+
+    private final int line, column;
+    private SnakeAgent agent;
+    private Food food;
+    private Wall wall;
+    private Tail tail;
+
+    public Cell(int line, int column) {
+        this.line = line;
+        this.column = column;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+
+    public boolean hasAgent() {
+        return agent != null;
+    }
+
+    public boolean hasTail() {
+        return tail != null;
+    }
+
+    public boolean hasFood() {
+        return food != null;
+    }
+
+    public SnakeAgent getAgent() {
+        return agent;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public Tail getTail() {
+        return tail;
+    }
+
+    public void setAgent(SnakeAgent agent) {
+        this.agent = agent;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
+    }
+
+    public void setTail(Tail tail) {
+        this.tail = tail;
+    }
+
+    public Color getColor() {
+        if (hasAgent()) {
+            return agent.getColor();
+        } else if (hasFood()) {
+            return food.getColor();
+        } else if (hasWall()) {
+            return wall.getColor();
+        } else if (hasTail()) {
+            return tail.getColor();
+        }
+        return Cell.COLOR;
+    }
+
+    public boolean hasWall() {
+        return wall != null;
+    }
+
+    public Wall getWall() {
+        return wall;
+    }
+
+    public void setWall(Wall wall) {
+        this.wall = wall;
+    }
+
+    public boolean isToTheNorthOf(Cell relativeTo) {
+        return this.line < relativeTo.line;
+    }
+
+    public boolean isToTheSouthOf(Cell relativeTo) {
+        return this.line > relativeTo.line;
+    }
+
+    public boolean isToTheEastOf(Cell relativeTo) {
+        return this.column > relativeTo.column;
+    }
+
+    public boolean isToTheWestOf(Cell relativeTo) {
+        return this.column < relativeTo.column;
+    }
+
+
+}

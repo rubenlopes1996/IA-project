@@ -1,39 +1,30 @@
 package gui;
 
-import snake.Cell;
-import snake.SnakeAgent;
 import snake.snakeAI.ga.geneticOperators.*;
 import snake.snakeAI.ga.selectionMethods.RouletteWheel;
 import snake.snakeAI.ga.selectionMethods.SelectionMethod;
 import snake.snakeAI.ga.selectionMethods.Tournament;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import snake.snakeAI.SnakeIndividual;
 import snake.snakeAI.SnakeProblem;
-import snake.snakeAI.nn.SnakeAIAgent;
-import snake.snakeAdhoc.SnakeAdhocAgent;
-import snake.snakeRandom.SnakeRandomAgent;
 
 public class PanelParameters extends PanelAtributesValue {
 
     public static final int TEXT_FIELD_LENGHT = 7;
 
-    // TODO MODIFY TO CHANGE THE DEFAULT PARAMETER VALUES
     public static final String SEED = "2";
     public static final String POPULATION_SIZE = "200";
-    public static final String GENERATIONS = "1000";
+    public static final String GENERATIONS = "350";
     public static final String TOURNAMENT_SIZE = "4";
-    public static final String PROB_RECOMBINATION = "0.7";
-    public static final String PROB_MUTATION = "0.7";
+    public static final String PROB_RECOMBINATION = "0.2";
+    public static final String PROB_MUTATION = "0.03";
 
     JTextField textFieldSeed = new JTextField(SEED, TEXT_FIELD_LENGHT);
     JTextField textFieldN = new JTextField(POPULATION_SIZE, TEXT_FIELD_LENGHT);
@@ -45,7 +36,6 @@ public class PanelParameters extends PanelAtributesValue {
     JComboBox comboBoxRecombinationMethods = new JComboBox(recombinationMethods);
     JTextField textFieldProbRecombination = new JTextField(PROB_RECOMBINATION, TEXT_FIELD_LENGHT);
     JTextField textFieldProbMutation = new JTextField(PROB_MUTATION, TEXT_FIELD_LENGHT);
-    //TODO - MORE PARAMETERS?
 
     public PanelParameters() {
         title = "Genetic algorithm parameters";
@@ -79,7 +69,6 @@ public class PanelParameters extends PanelAtributesValue {
         labels.add(new JLabel("Mutation prob.: "));
         valueComponents.add(textFieldProbMutation);
 
-        //TODO - MORE PARAMETERS?
         configure();
     }
 
@@ -118,8 +107,7 @@ public class PanelParameters extends PanelAtributesValue {
 
     public Mutation<SnakeIndividual> getMutationMethod() {
         double mutationProbability = Double.parseDouble(textFieldProbMutation.getText());
-        //TODO
-        return new MutationMUTATION_NAME<>(mutationProbability/*TODO?*/);
+        return new MutationChange<>(mutationProbability);
     }
 }
 

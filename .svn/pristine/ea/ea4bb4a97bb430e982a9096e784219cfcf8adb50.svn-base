@@ -1,0 +1,163 @@
+package snake.snakeAdhoc;
+
+import snake.*;
+
+import java.awt.*;
+
+
+public class SnakeAdhocAgent extends SnakeAgent {
+
+    public SnakeAdhocAgent(Cell cell) {
+        super(cell, Color.CYAN);
+    }
+
+    public void act(Environment environment) {
+        Perception perception = buildPerception(environment);
+        Action action = decide(perception);
+        execute(action, environment);
+    }
+
+    public Cell getCell() {
+        return cell;
+    }
+
+    public void setCell(Cell cell) {
+        this.cell.setAgent(null);
+        this.cell = cell;
+        this.cell.setAgent(this);
+    }
+
+    public Color getColor() {
+        return Color.BLACK;
+    }
+
+    public Action decide(Perception perception) {
+        // todo modify to improve the SnakeAdhocAgent decision process
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+        Cell food = perception.getFood();
+
+        Action action = null;
+
+        //TODO ACRESCENTAR IF's PARA DESVIAR DA CAUDA
+
+        if (w != null) {
+            if (w.hasFood()) {
+                w.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                return Action.WEST;
+            }
+        }
+
+        if (n != null) {
+            if (n.hasFood()) {
+                n.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                return Action.NORTH;
+            }
+        }
+
+        if (e != null) {
+            if (e.hasFood()) {
+                e.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                return Action.EAST;
+            }
+        }
+
+        if (s != null) {
+            if (s.hasFood()) {
+                s.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                return Action.SOUTH;
+            }
+        }
+
+
+        if (w != null && !w.hasWall() ) {
+            if(!w.hasTail())
+            action = foodChase(food,perception);
+
+        }
+
+
+        if (n != null && !n.hasWall() ) {
+            if (!n.hasTail())
+            action = foodChase(food,perception);
+        }
+
+
+        if (e != null && !e.hasWall()  ) {
+            if (!e.hasTail())
+            action = foodChase(food,perception);
+        }
+
+
+        if (s != null && !s.hasWall() ) {
+            if (!s.hasTail())
+            action = foodChase(food,perception);
+        }
+        moverCauda(this.getCell());
+        return action;
+    }
+
+    private Action foodChase(Cell food, Perception perception){
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+        Action action = null;
+
+        if (this.getCell().getLine() == food.getLine()) {
+            if (this.getCell().getColumn() < food.getColumn() && !e.hasTail() && !e.hasAgent()) {
+                action = Action.EAST;
+            } else if (this.getCell().getColumn() > food.getColumn() && !w.hasTail() && !w.hasAgent()){
+                action = Action.WEST;
+            }
+        }
+
+        if (this.getCell().getLine() == food.getLine()) {
+            if (this.getCell().getColumn() > food.getColumn() && !w.hasTail() && !w.hasAgent()) {
+                action = Action.WEST;
+            } else if (this.getCell().getColumn() < food.getColumn() && !e.hasTail() && !e.hasAgent()){
+                action = Action.EAST;
+            }
+        }
+
+        if (this.getCell().getLine() < food.getLine()) {
+            if (this.getCell().getColumn() == food.getColumn() && !n.hasTail() && !n.hasAgent()) {
+                action = Action.NORTH;
+            } else if (this.getCell().getColumn() != food.getColumn() && !s.hasTail() && !s.hasAgent()){
+                action = Action.SOUTH;
+            }
+        }
+
+        if (this.getCell().getLine() > food.getLine()) {
+            if (this.getCell().getColumn() == food.getColumn() && !s.hasTail() && !s.hasAgent()) {
+                action = Action.SOUTH;
+            } else if(this.getCell().getColumn() != food.getColumn() && !n.hasTail() && !n.hasAgent()){
+                action = Action.NORTH;
+            }
+        }
+
+        if (this.getCell().getColumn() == food.getColumn()){
+            if (this.getCell().getLine() > food.getLine() && !n.hasTail() && !n.hasAgent()){
+                action = Action.NORTH;
+            } else if (this.getCell().getLine() < food.getLine() && !s.hasTail() && !s.hasAgent()){
+                action = Action.SOUTH;
+            }
+        }
+
+        if (this.getCell().getColumn() == food.getColumn()){
+            if (this.getCell().getLine() < food.getLine() && !s.hasTail() && !s.hasAgent()){
+                action = Action.SOUTH;
+            } else if (this.getCell().getLine() > food.getLine() && !n.hasTail() && !n.hasAgent()){
+                action = Action.NORTH;
+            }
+        }
+        return action;
+    }
+}
+

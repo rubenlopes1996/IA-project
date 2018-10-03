@@ -1,0 +1,51 @@
+package snake.snakeAI.ga;
+
+
+public abstract class RealVectorIndividual<P extends Problem, I extends RealVectorIndividual> extends Individual<P, I> {
+    // TODO
+    protected double[] genome;
+
+    public RealVectorIndividual(P problem, int size) {
+        super(problem);
+        // TODO
+   /*     genome = new double[size];
+        for (int g = 0; g < size; g++) {
+            genome[g] = GeneticAlgorithm.random.nextDouble();
+        }
+*/
+    }
+
+    public RealVectorIndividual(RealVectorIndividual<P, I> original) {
+        super(original);
+        genome = new double[10];
+        for (int g = 0; g < 10; g++) {
+            genome[g] = GeneticAlgorithm.random.nextDouble();
+        }
+    }
+
+    @Override
+    public int getNumGenes() {
+        // TODO feito?
+        return 10;
+    }
+
+    public double getGene(int index) {
+        // TODO feito?
+        return genome[index];
+    }
+
+    public void setGene(int index, double newValue) {
+        // TODO feito?
+        genome[index] = newValue;
+    }
+
+    @Override
+    public void swapGenes(RealVectorIndividual other, int index) {
+        // TODO feito?
+        double aux = genome[index];
+        genome[index] = other.genome[index];
+        other.genome[index] = aux;
+
+
+    }
+}

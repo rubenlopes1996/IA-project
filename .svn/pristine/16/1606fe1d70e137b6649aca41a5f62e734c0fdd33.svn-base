@@ -1,0 +1,74 @@
+package snake.snakeAI;
+
+import snake.snakeAI.ga.RealVectorIndividual;
+
+public class SnakeIndividual extends RealVectorIndividual<SnakeProblem, SnakeIndividual> {
+    private double value;
+    private double weight;
+
+
+    public SnakeIndividual(SnakeProblem problem, int size /*TODO?*/) {
+        super(problem, size);
+        //TODO?
+    }
+
+    public SnakeIndividual(SnakeIndividual original) {
+        //TODO feito ?
+        super(original);
+        this.weight = original.weight;
+        this.value = original.value;
+
+    }
+
+    @Override
+    public double computeFitness() {
+        //TODO feito??
+        value = weight = 0;
+        int numIterations = problem.getEnvironment().getIterations();
+        int numFoods = problem.getEnvironment().getFoodEaten();
+
+        fitness = numIterations*0.8 + numFoods*0.2;
+
+        return fitness;
+
+    }
+
+    public double[] getGenome() {
+        //TODO feito??
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nWeight: " + weight + " (limit: " + weight + ")");
+        sb.append("\nValue: " + value);
+        sb.append("\nfitness: " + fitness);
+        return sb.toString();
+        //Todo Falta genoma??
+    }
+
+    /**
+     * @param i
+     * @return 1 if this object is BETTER than i, -1 if it is WORST than I and
+     * 0, otherwise.
+     */
+
+    @Override
+    public int compareTo(SnakeIndividual i) {
+        //TODO feito?
+        if (i.getFitness() > this.getFitness()) {
+            return -1;
+        }
+        if(i.getFitness() < this.getFitness()) {
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    public SnakeIndividual clone() {
+
+        return new SnakeIndividual(this);
+    }
+}

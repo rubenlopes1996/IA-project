@@ -1,0 +1,338 @@
+package snake.snakeAI.nn;
+
+import snake.*;
+
+
+import java.awt.Color;
+import java.util.Random;
+
+//Tarefa 3
+public class SnakeAIAgent extends SnakeAgent {
+
+    final private int inputLayerSize;
+    final private int hiddenLayerSize;
+    final private int outputLayerSize;
+
+    /**
+     * Network inputs array.
+     */
+    final private int[] inputs;
+    /**
+     * Hiddden layer weights.
+     */
+    final private double[][] w1;
+    /**
+     * Output layer weights.
+     */
+    final private double[][] w2;
+    /**
+     * Hidden layer activation values.
+     */
+    final private double[] hiddenLayerOutput;
+    /**
+     * Output layer activation values.
+     */
+    final private int[] output;
+
+    final private int[] inputLayer;
+
+    public SnakeAIAgent(Cell cell, int inputLayerSize, int hiddenLayerSize, int outputLayerSize) {
+        super(cell, Color.yellow);
+        this.inputLayerSize = inputLayerSize;
+        this.hiddenLayerSize = hiddenLayerSize;
+        this.outputLayerSize = outputLayerSize;
+        inputs = new int[inputLayerSize];
+        inputs[inputs.length - 1] = -1; //bias entry
+        w1 = new double[inputLayerSize][hiddenLayerSize]; // the bias entry for the hidden layer neurons is already counted in inputLayerSize variable
+        w2 = new double[hiddenLayerSize + 1][outputLayerSize]; // + 1 due to the bias entry for the output neurons
+        hiddenLayerOutput = new double[hiddenLayerSize + 1];
+        hiddenLayerOutput[hiddenLayerSize] = -1; // the bias entry for the output neurons
+        output = new int[outputLayerSize];
+        inputLayer = new int[inputLayerSize];
+    }
+
+    /**
+     * Initializes the network's weights
+     *
+     * @param weights vector of weights comming from the individual.
+     */
+    public void setWeights(double[] weights) {
+        // TODO está feito??
+        Random r = new Random(Environment.random.nextLong());
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = r.nextDouble() * 2 - 1;
+        }
+
+    }
+
+    /**
+     * Computes the output of the network for the inputs saved in the class
+     * vector "inputs".
+     */
+    public int forwardPropagation() {
+        // TODO está feito?
+        double somaPesada = 0;
+        int max = output[0];
+        int indice = 0;
+
+        for (int i = 0; i < hiddenLayerSize; i++) {
+            for (int j = 0; j < inputLayerSize; j++) {
+                somaPesada += inputLayer[j] * w1[j][i];
+            }
+
+            hiddenLayerOutput[i] = somaPesada;
+        }
+
+        for (int i = 0; i < outputLayerSize; i++) {
+            somaPesada = 0;
+            for (int j = 0; j < hiddenLayerSize; j++) {
+                somaPesada += hiddenLayerOutput[j] * w2[j][i];
+            }
+
+
+            for (int k = 1; k < output.length; k++) {
+                if (output[k] > max) {
+                    max = output[k];
+                    indice = k;
+
+                }
+            }
+
+
+            output[i] = (int) somaPesada;
+        }
+
+        return indice; //output[indice] dá a posição do maior valor do output
+    }
+
+
+    @Override
+    public Action decide(Perception perception) {
+        // TODO
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+        Cell food = perception.getFood();
+        Action action = null;
+
+        //Verificar para mesmos valores iguais
+        //se bater na parede ou na cauda morre
+
+        //observar os valores dos outputs
+        // decidir acção
+
+        //if para a perceção da comida
+        //if para ações south!= null && !south.hasTail() && !south.hasAgent()
+        //inputs[4]=1
+        inputs[0] = 0;
+        inputs[1] = 0;
+        inputs[2] = 0;
+        inputs[3] = 0;
+        if (w != null) {
+            if (w.hasFood()) {
+                w.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                inputs[3] = 1;
+            }
+        }
+
+        if (n != null) {
+            if (n.hasFood()) {
+                n.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                inputs[0] = 1;
+
+            }
+        }
+
+        if (e != null) {
+            if (e.hasFood()) {
+                e.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                inputs[2] = 1;
+            }
+        }
+
+        if (s != null) {
+            if (s.hasFood()) {
+                s.setFood(null);
+                snakeBody.add(0, new Tail(cell));
+                inputs[1] = 1;
+            }
+        }
+
+        if (this.getCell().getLine() == food.getLine()) {
+            if (this.getCell().getColumn() < food.getColumn()) {
+                if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else {
+                    inputs[3] = 1;
+                }
+            } else if (this.getCell().getColumn() > food.getColumn()) {
+                if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else {
+                    inputs[2] = 1;
+                }
+            }
+        }
+
+        if (this.getCell().getLine() == food.getLine()) {
+            if (this.getCell().getColumn() > food.getColumn()) {
+                if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else {
+                    inputs[2] = 1;
+                }
+            } else if (this.getCell().getColumn() < food.getColumn()) {
+                if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else {
+                    inputs[3] = 1;
+                }
+            }
+        }
+
+        if (this.getCell().getLine() < food.getLine()) {
+            if (this.getCell().getColumn() == food.getColumn()) {
+                if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[1] = 1;
+                }
+            } else if (this.getCell().getColumn() != food.getColumn()) {
+                if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[0] = 1;
+                }
+            }
+        }
+
+        if (this.getCell().getLine() > food.getLine()) {
+            if (this.getCell().getColumn() == food.getColumn()) {
+                if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[0] = 1;
+                }
+            } else if (this.getCell().getColumn() != food.getColumn()) {
+                if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else {
+                    inputs[1] = 1;
+                }
+            }
+        }
+
+        if (this.getCell().getColumn() == food.getColumn()) {
+            if (this.getCell().getLine() > food.getLine()) {
+                if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[1] = 1;
+                }
+            } else if (this.getCell().getLine() < food.getLine()) {
+                if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[0] = 1;
+                }
+            }
+        }
+
+        if (this.getCell().getColumn() == food.getColumn()) {
+            if (this.getCell().getLine() < food.getLine()) {
+                if (s != null && !s.hasTail() && !s.hasAgent() && !s.hasWall()) {
+                    inputs[1] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[0] = 1;
+                }
+            } else if (this.getCell().getLine() > food.getLine()) {
+                if (n != null && !n.hasTail() && !n.hasAgent() && !n.hasWall()) {
+                    inputs[0] = 1;
+                } else if (e != null && !e.hasTail() && !e.hasAgent() && !e.hasWall()) {
+                    inputs[2] = 1;
+                } else if (w != null && !w.hasTail() && !w.hasAgent() && !w.hasWall()) {
+                    inputs[3] = 1;
+                } else {
+                    inputs[1] = 1;
+                }
+            }
+        }
+        int max = output[0];
+        int indice = 0;
+
+        for (int k = 1; k < output.length; k++) {
+            if (output[k] > max) {
+                max = output[k];
+                indice = k;
+
+            }
+        }
+
+        switch (indice) {
+            case 0:
+                action = Action.NORTH;
+                break;
+            case 1:
+                action = Action.SOUTH;
+                break;
+            case 2:
+                action = Action.EAST;
+                break;
+            case 3:
+                action = Action.WEST;
+
+
+        }
+
+        return action;
+
+    }
+}

@@ -1,0 +1,117 @@
+package snake.snakeAI;
+
+import snake.*;
+import snake.snakeAI.ga.RealVectorIndividual;
+import snake.snakeAI.nn.SnakeAIAgent;
+import snake.snakeAI.nn.SnakeAIAgent2;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SnakeIndividual extends RealVectorIndividual<SnakeProblem, SnakeIndividual> {
+    private int food, movements;
+    public int bestFood;
+    public int bestMovements;
+    public double bestFitness;
+
+    public SnakeIndividual(SnakeProblem problem, int size /*TODO?*/) {
+        super(problem, size);
+        //TODO?
+
+
+    }
+
+    public SnakeIndividual(SnakeIndividual original) {
+        //TODO feito ?
+        super(original);
+        this.movements = original.movements;
+        this.food = original.food;
+        this.bestMovements = original.bestMovements;
+        this.bestFood = original.bestFood;
+        this.bestFitness = original.bestFitness;
+    }
+
+    @Override
+    public double computeFitness() {
+        bestFood = bestMovements = 0;
+        Environment environment = problem.getEnvironment();
+        List<SnakeAgent> agents = new ArrayList<>();
+        int[] vector;
+        food = 0;
+        movements = 0;
+
+
+        for (int i = 0; i < problem.getNumEvironmentSimulations(); i++) {
+
+            environment.initialize(i);
+            agents = environment.getAgents();
+
+                for (int j = 0; j < agents.size(); j++) {
+                    if (agents.get(j) instanceof SnakeAIAgent) {
+                        ((SnakeAIAgent) agents.get(j)).setWeights(genome);
+                    }
+                    if (agents.get(j) instanceof SnakeAIAgent2) {
+                        ((SnakeAIAgent2) agents.get(j)).setWeights(genome);
+
+                    }
+                }
+
+                vector = environment.simulateSnakeAi();
+                movements += vector[0];
+                food += vector[1];
+                bestMovements = vector[2];
+                bestFood = vector[3];
+
+            }
+            fitness = (food * 100 - movements * 0.5);
+            food = food / problem.getNumEvironmentSimulations();
+            movements = movements / problem.getNumEvironmentSimulations();
+            fitness = fitness / problem.getNumEvironmentSimulations();
+
+            bestFitness = (bestFood * 100 - bestMovements * 0.5);
+
+            if (fitness > bestFitness) {
+                bestFitness = fitness;
+            }
+            return fitness;
+
+        }
+
+        public double[] getGenome () {
+            return genome;
+        }
+
+        @Override
+        public String toString () {
+            StringBuilder sb = new StringBuilder();
+            sb.append("\nAverage:");
+            sb.append("\n\tFitness: " + fitness);
+            sb.append("\n\tMovements: " + (double) movements);
+            sb.append("\n\tFood Eaten: " + (double) food);
+            sb.append("\nBest snake:");
+            sb.append("\n\tFitness: " + bestFitness);
+            sb.append("\n\tMovements: " + (double) bestMovements);
+            sb.append("\n\tFood Eaten: " + (double) bestFood);
+
+
+            return sb.toString();
+        }
+
+
+        @Override
+        public int compareTo (SnakeIndividual i){
+            if (this.fitness > i.fitness)
+                return 1;
+
+            if (this.fitness == i.fitness)
+                return 0;
+
+            return -1;
+        }
+
+        @Override
+        public SnakeIndividual clone () {
+            return new SnakeIndividual(this);
+        }
+    }

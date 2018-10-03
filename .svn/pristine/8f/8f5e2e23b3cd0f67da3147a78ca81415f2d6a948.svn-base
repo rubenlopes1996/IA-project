@@ -1,0 +1,67 @@
+package snake.snakeRandom;
+
+import snake.*;
+
+import java.awt.*;
+import java.util.Random;
+
+public class SnakeRandomAgent extends SnakeAgent {
+    public SnakeRandomAgent(Cell cell)
+    {
+        super(cell,Color.BLUE);
+    }
+
+    @Override //o Action que ele devolve é uma direção random
+    protected Action decide(Perception perception) {
+        Action action = null;
+
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+
+        if (w != null) {
+            if (w.hasFood()) {
+                w.setFood(null);
+                return Action.WEST;
+            }
+        }
+
+        if (n != null) {
+            if (n.hasFood()) {
+                n.setFood(null);
+                return Action.NORTH;
+            }
+        }
+
+        if (e != null) {
+            if (e.hasFood()) {
+                e.setFood(null);
+                return Action.EAST;
+            }
+        }
+
+        if (s != null) {
+            if (s.hasFood()) {
+                s.setFood(null);
+                return Action.SOUTH;
+            }
+        }
+
+        if (Environment.random.nextInt(4) == 0 && w != null && !w.hasTail() && !w.hasAgent() ) {
+            action = Action.WEST;
+        } else if (Environment.random.nextInt(4) == 1 && n != null && !n.hasTail() && !n.hasAgent()) {
+            action = Action.NORTH;
+
+        } else if (Environment.random.nextInt(4) == 2 && e != null && !e.hasTail() && !e.hasAgent()) {
+            action = Action.EAST;
+
+        } else if(Environment.random.nextInt(4) == 3 && s != null && !s.hasTail() && !s.hasAgent()){
+            action = Action.SOUTH;
+        }
+
+        return action;
+    }
+
+
+}

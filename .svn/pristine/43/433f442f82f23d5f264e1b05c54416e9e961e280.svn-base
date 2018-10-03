@@ -1,0 +1,80 @@
+package snake.snakeAI;
+
+import snake.*;
+import snake.snakeAI.ga.RealVectorIndividual;
+import snake.snakeAI.nn.SnakeAIAgent;
+
+public class SnakeIndividual extends RealVectorIndividual<SnakeProblem, SnakeIndividual> {
+    double foodEaten = 0;
+    double numberOfMovements = 0;
+
+    public SnakeIndividual(SnakeProblem problem, int size /*TODO?*/) {
+        super(problem, size);
+        //TODO?
+    }
+
+    public SnakeIndividual(SnakeIndividual original) {
+        //TODO feito ?
+        super(original);
+        this.foodEaten = original.foodEaten;
+        this.numberOfMovements = original.numberOfMovements;
+    }
+
+    @Override
+    public double computeFitness() {
+        Environment environment = problem.getEnvironment();
+        int movimentos = 0;
+        int comidas = 0;
+        for (int i = 0; i < problem.getNumEvironmentSimulations(); i++) {
+            movimentos = 0;
+            comidas = 0;
+            environment.initialize(i);
+            SnakeAIAgent agent = (SnakeAIAgent) environment.getAgents().get(0);
+            agent.setWeights(genome);
+            environment.simulate();
+
+            movimentos += environment.getNumIterations();
+            comidas += environment.getFoodEaten();
+
+
+            fitness = (comidas << 7) + (movimentos >> 3);
+        }
+
+        foodEaten = (comidas / problem.getNumEvironmentSimulations());
+        numberOfMovements = (movimentos / problem.getNumEvironmentSimulations());
+
+        return fitness;
+
+    }
+
+    public double[] getGenome() {
+        return genome;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nfitness: " + fitness);
+        sb.append("\nComidas comidas: " + foodEaten);
+        sb.append("\nMovimentos movimentados: " + numberOfMovements);
+        return sb.toString();
+        //Todo
+    }
+
+    /**
+     * @param i
+     * @return 1 if this object is BETTER than i, -1 if it is WORST than I and
+     * 0, otherwise.
+     */
+
+    @Override
+    public int compareTo(SnakeIndividual i) {
+        //TODO feito?
+        return Double.compare(this.fitness, i.fitness);
+    }
+
+    @Override
+    public SnakeIndividual clone() {
+        return new SnakeIndividual(this);
+    }
+}

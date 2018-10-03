@@ -1,0 +1,136 @@
+package snake.snakeAI.nn;
+
+import snake.*;
+
+import java.awt.Color;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
+
+//Tarefa 3
+public class SnakeAIAgent extends SnakeAgent {
+
+    final private int inputLayerSize;
+    final private int hiddenLayerSize;
+    final private int outputLayerSize;
+
+    /**
+     * Network inputs array.
+     */
+    final private int[] inputs;
+    /**
+     * Hiddden layer weights.
+     */
+    final private double[][] w1;
+    /**
+     * Output layer weights.
+     */
+    final private double[][] w2;
+    /**
+     * Hidden layer activation values.
+     */
+    final private double[] hiddenLayerOutput;
+    /**
+     * Output layer activation values.
+     */
+    final private int[] output;
+
+    final private int[] inputLayer;
+
+    public SnakeAIAgent(Cell cell, int inputLayerSize, int hiddenLayerSize, int outputLayerSize) {
+        super(cell, Color.PINK);
+        this.inputLayerSize = inputLayerSize;
+        this.hiddenLayerSize = hiddenLayerSize;
+        this.outputLayerSize = outputLayerSize;
+        inputs = new int[inputLayerSize];
+        inputs[inputs.length - 1] = -1; //bias entry
+        w1 = new double[inputLayerSize][hiddenLayerSize]; // the bias entry for the hidden layer neurons is already counted in inputLayerSize variable
+        w2 = new double[hiddenLayerSize + 1][outputLayerSize]; // + 1 due to the bias entry for the output neurons
+        hiddenLayerOutput = new double[hiddenLayerSize + 1];
+        hiddenLayerOutput[hiddenLayerSize] = -1; // the bias entry for the output neurons
+        output = new int[outputLayerSize];
+        inputLayer = new int[inputLayerSize];
+    }
+
+    /**
+     * Initializes the network's weights
+     *
+     * @param weights vector of weights comming from the individual.
+     */
+    public void setWeights(double[] weights) {
+        // TODO está feito??
+        Random r = new Random(Environment.random.nextLong());
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = r.nextDouble() * 2 - 1;
+        }
+
+    }
+
+    /**
+     * Computes the output of the network for the inputs saved in the class
+     * vector "inputs".
+     */
+    private void forwardPropagation() {
+        // TODO está feito?
+        float somaPesada = 0;
+        for (int i = 0; i < hiddenLayerSize; i++) {
+            for (int j = 0; j < inputLayerSize; j++) {
+                somaPesada += inputLayer[j] * w1[j][i];
+            }
+
+            hiddenLayerOutput[i] = sigmoide(somaPesada);
+        }
+
+        for (int i = 0; i < outputLayerSize; i++) {
+            somaPesada = 0;
+            for (int j = 0; j < hiddenLayerSize; j++) {
+                somaPesada += hiddenLayerOutput[j] * w2[j][i];
+            }
+            output[i] = (int) sigmoide(somaPesada);
+        }
+    }
+
+    private double sigmoide(float somaPesada) {
+
+        return 1 / (1 + Math.pow(Math.E, -somaPesada));
+    }
+
+    @Override
+    protected Action decide(Perception perception) {
+        // TODO
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+        Cell food = perception.getFood();
+
+        Action action = null;
+        int max= output[0];
+        int indice= 0;
+
+        for (int i=1;i<output.length;i++){
+            if(output[i]>max){
+                max = output[i];
+                indice=i;
+
+            }
+        }
+
+        switch (indice){
+            case 0:
+                action = Action.NORTH;
+                break;
+            case 1:
+                action = Action.EAST;
+                break;
+            case 2:
+                action = Action.SOUTH;
+                break;
+            case 3:
+                action = Action.WEST;
+        }
+
+        return action;
+
+    }
+}

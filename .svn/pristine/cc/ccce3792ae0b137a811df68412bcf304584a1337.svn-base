@@ -1,0 +1,271 @@
+package snake;
+
+import snake.snakeAI.SnakeIndividual;
+import snake.snakeAI.SnakeProblem;
+import snake.snakeAI.nn.SnakeAIAgent;
+import snake.snakeAdhoc.SnakeAdhocAgent;
+import snake.snakeRandom.SnakeRandomAgent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Environment {
+
+    public static Random random;
+    public final Cell[][] grid;
+    private final List<SnakeAgent> agents;
+    private Food food;
+    private int maxIterations;
+    private int option;
+    private int foodeat;
+    public int numIterations;
+
+    private SnakeIndividual bestAISnakeinRun = null;
+
+    private int numLines;
+    private int numColumns;
+
+    public Environment(int size, int maxIterations, int option) {
+
+        this.maxIterations = maxIterations;
+
+        this.grid = new Cell[size][size];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                grid[i][j] = new Cell(i, j);
+            }
+        }
+        this.agents = new ArrayList<>();
+        Environment.random = new Random();
+        this.option = option;
+        initialize(1);
+        this.foodeat = 0;
+        this.numIterations = 0;
+    }
+
+    public void initialize(int seed) {
+        random.setSeed(seed);
+        resetEnvironment();
+        placeAgents();
+        placeFood();
+    }
+
+    private void placeAgents() {
+        Cell cell = new Cell(random.nextInt(grid.length), random.nextInt(grid.length));
+        SnakeRandomAgent snakeRandomAgent = new SnakeRandomAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)));
+        SnakeAdhocAgent snakeAdhocAgent = new SnakeAdhocAgent(new Cell(random.nextInt(grid.length), random.nextInt(grid.length)));
+
+        switch (option) {
+            case 0:
+                agents.add(snakeRandomAgent);
+                break;
+            case 1:
+                agents.add(snakeAdhocAgent);
+                break;
+            case 2:
+                SnakeAIAgent agent = new SnakeAIAgent(cell, 17, 8, 4);
+                if (bestAISnakeinRun != null)
+                    agent.setWeights(bestAISnakeinRun.getGenome());
+                agents.add(agent);
+                break;
+            case 3:
+                agents.add(snakeAdhocAgent);
+                agents.add(snakeRandomAgent);
+                break;
+        }
+    }
+
+    private void resetEnvironment() {
+        this.numIterations = 0;
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                grid[i][j].setAgent(null);
+                grid[i][j].setFood(null);
+                grid[i][j].setTail(null);
+            }
+        }
+
+        agents.clear();
+    }
+
+    private void placeFood() {
+        int line;
+        int collumn;
+
+        do {
+            line = Environment.random.nextInt(10);
+            collumn = Environment.random.nextInt(10);
+        } while (getCell(line, collumn).hasAgent() || getCell(line, collumn).hasTail());
+
+        this.food = new Food(getCell(line, collumn));
+
+    }
+/*
+    public void simulate() {
+        if (agents.size() == 1) {
+            simulateSnake(maxIterations);
+        } else if (agents.size() == 2) {
+            simulateSnake(300);
+        }
+
+    }
+
+    public void simulateSnake(int maxIterations) {
+        for (int i = 0; i < maxIterations; i++) {
+            for (SnakeAgent snakeAgent : agents) {
+                if (snakeAgent.isAlive()) {
+                    numIterations ++;
+                    snakeAgent.act(this);
+                    fireUpdatedEnvironment();
+                    if (getFood()) {
+                        placeFood();
+                    }
+                } else {
+                    getStatistics();
+                    System.out.println("Morre com " + numIterations + " Come " + foodeat);
+                    return;
+                }
+            }
+        }
+    }*/
+
+    public void simulate() {
+        if (agents.size() == 1) {
+            maxIterations = 500;
+        } else if (agents.size() == 2) {
+            maxIterations = 300;
+        }
+
+        for (int i = 0; i < maxIterations; i++) {
+            for (SnakeAgent agent : agents) {
+                if (agent.isAlive()) {
+                    agent.act(this);
+                    fireUpdatedEnvironment();
+                    if (getFood()) {
+                        placeFood();
+                    }
+                } else {
+                    System.out.println("Morre com " + numIterations + " Come " + foodeat);
+                    //JOptionPane.showMessageDialog(null, "Snake is dead", "Snake : ", JOptionPane.INFORMATION_MESSAGE);
+                    foodeat = 0;
+                    getStatistics();
+                    agents.clear();
+                    return;
+                }
+
+                numIterations++;
+            }
+        }
+    }
+
+    public int getSize() {
+        return grid.length;
+    }
+
+    public Cell getNorthCell(Cell cell) {
+        if (cell.getLine() > 0) {
+            return grid[cell.getLine() - 1][cell.getColumn()];
+        }
+        return null;
+    }
+
+    public Cell getSouthCell(Cell cell) {
+        if (cell.getLine() < grid.length - 1) {
+            return grid[cell.getLine() + 1][cell.getColumn()];
+        }
+        return null;
+    }
+
+    public Cell getEastCell(Cell cell) {
+        if (cell.getColumn() < grid[0].length - 1) {
+            return grid[cell.getLine()][cell.getColumn() + 1];
+        }
+        return null;
+    }
+
+    public Cell getWestCell(Cell cell) {
+        if (cell.getColumn() > 0) {
+            return grid[cell.getLine()][cell.getColumn() - 1];
+        }
+        return null;
+    }
+
+    public Cell getFoodPosition(Cell cell) {
+        return food.getCell();
+
+    }
+
+    public final Cell getCell(int linha, int coluna) {
+        return grid[linha][coluna];
+    }
+
+    public Color getCellColor(int linha, int coluna) {
+        return grid[linha][coluna].getColor();
+    }
+
+    public boolean getFood() {
+        for (SnakeAgent snakeAgent : agents) {
+            if (snakeAgent.getCell() == food.getCell()) {
+                this.food = null;
+                foodeat++;
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public int getNumIterations() {
+        return numIterations;
+    }
+
+    public int getFoodEaten() {
+        return foodeat;
+    }
+
+    public void getStatistics() {
+        snake.snakeAI.ga.utils.FileOperations.appendToTextFile("statistic_Snake.xls", "\n" + agents.toString() + "\t" + foodeat + "\t" + numIterations + "\n");
+    }
+
+    public int getNumLines() {
+        return numLines;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
+
+    //listeners
+    private final ArrayList<EnvironmentListener> listeners = new ArrayList<>();
+
+    public synchronized void addEnvironmentListener(EnvironmentListener l) {
+        if (!listeners.contains(l)) {
+            listeners.add(l);
+        }
+    }
+
+    public synchronized void removeEnvironmentListener(EnvironmentListener l) {
+        listeners.remove(l);
+    }
+
+    public void fireUpdatedEnvironment() {
+        for (EnvironmentListener listener : listeners) {
+            listener.environmentUpdated();
+        }
+    }
+
+    public int getMaxIterations() {
+        return maxIterations;
+    }
+
+
+    public List<SnakeAgent> getAgents() {
+        return agents;
+    }
+
+
+}

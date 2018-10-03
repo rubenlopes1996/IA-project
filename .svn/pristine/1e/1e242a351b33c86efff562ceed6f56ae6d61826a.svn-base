@@ -1,0 +1,171 @@
+package snake.snakeAI.nn;
+
+import snake.*;
+
+
+import java.awt.Color;
+
+//Tarefa 3
+public class SnakeAIAgent extends SnakeAgent {
+
+    final private int inputLayerSize;
+    final private int hiddenLayerSize;
+    final private int outputLayerSize;
+
+    /**
+     * Network inputs array.
+     */
+    final private int[] inputs;
+    /**
+     * Hiddden layer weights.
+     */
+    final private double[][] w1;
+    /**
+     * Output layer weights.
+     */
+    final private double[][] w2;
+    /**
+     * Hidden layer activation values.
+     */
+    final private double[] hiddenLayerOutput;
+    /**
+     * Output layer activation values.
+     */
+    final private double[] output;
+
+    final private int[] inputLayer;
+
+    public SnakeAIAgent(Cell cell, int inputLayerSize, int hiddenLayerSize, int outputLayerSize) {
+        super(cell, Color.yellow);
+        this.inputLayerSize = inputLayerSize;
+        this.hiddenLayerSize = hiddenLayerSize;
+        this.outputLayerSize = outputLayerSize;
+        inputs = new int[inputLayerSize];
+        inputs[inputs.length - 1] = -1; //bias entry
+        w1 = new double[inputLayerSize][hiddenLayerSize]; // the bias entry for the hidden layer neurons is already counted in inputLayerSize variable
+        w2 = new double[hiddenLayerSize + 1][outputLayerSize]; // + 1 due to the bias entry for the output neurons
+        hiddenLayerOutput = new double[hiddenLayerSize + 1];
+        hiddenLayerOutput[hiddenLayerSize] = -1; // the bias entry for the output neurons
+        output = new double[outputLayerSize];
+        inputLayer = new int[inputLayerSize];
+    }
+
+
+    /**
+     * Initializes the network's weights
+     *
+     * @param weights vector of weights comming from the individual.
+     */
+    public void setWeights(double[] weights) {
+        // TODO está feito
+        int k = 0;
+        for (int i = 0; i < inputLayerSize; i++) {
+            for (int j = 0; j < hiddenLayerSize; j++) {
+                w1[i][j] = weights[k++];
+            }
+        }
+        for (int i = 0; i < hiddenLayerSize + 1; i++) {
+            for (int j = 0; j < outputLayerSize; j++) {
+                w2[i][j] = weights[k++];
+            }
+        }
+    }
+
+    public double[] setWeightsBest(double[] weightsBest) {
+        return weightsBest;
+    }
+
+    /**
+     * Computes the output of the network for the inputs saved in the class
+     * vector "inputs".
+     */
+    public void forwardPropagation() {
+        // TODO está feito?
+        float somaPesada = 0;
+        for (int i = 0; i < hiddenLayerSize; i++) {
+            for (int j = 0; j < inputLayerSize; j++) {
+                somaPesada += inputs[j] * w1[j][i];
+            }
+
+            hiddenLayerOutput[i] = sigmoide(somaPesada);
+        }
+
+        for (int i = 0; i < outputLayerSize; i++) {
+            somaPesada = 0;
+            for (int j = 0; j < hiddenLayerSize; j++) {
+                somaPesada += hiddenLayerOutput[j] * w2[j][i];
+            }
+            output[i] = sigmoide(somaPesada);
+        }
+
+    }
+
+    private double sigmoide(float somaPesada) {
+        return 1 / (1 + Math.pow(Math.E, -somaPesada));
+    }
+
+    @Override
+    public Action decide(Perception perception) {
+        // TODO
+        Cell food = perception.getFood();
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+        Action action = null;
+        //Verificar para mesmos valores iguais
+        //se bater na parede ou na cauda morre
+
+
+        inputs[0] = n != null && n.hasFood() ? 1 : 0;
+        inputs[1] = e != null && e.hasFood() ? 1 : 0;
+        inputs[2] = s != null && s.hasFood() ? 1 : 0;
+        inputs[3] = w != null && w.hasFood() ? 1 : 0;
+
+        inputs[4] = n != null && n.hasAgent() && n.hasTail() ? 1 : 0;
+        inputs[5] = e != null && e.hasAgent() && e.hasTail() ? 1 : 0;
+        inputs[6] = s != null && s.hasAgent() && s.hasTail() ? 1 : 0;
+        inputs[7] = w != null && w.hasAgent() && w.hasTail() ? 1 : 0;
+
+        if (n != null)
+            inputs[12] = (n.getLine() - food.getLine() > 0) ? 1 : (n.getLine() - food.getLine() == 0) ? 0 : -1; //N
+        else
+            inputs[12] = 0;
+        if (e != null)
+            inputs[13] = (e.getLine() - food.getLine() > 0) ? 1 : (e.getLine() - food.getLine() == 0) ? 0 : -1;//E
+        else
+            inputs[13] = 0;
+        if (s != null)
+            inputs[14] = (s.getLine() - food.getLine() > 0) ? 1 : (s.getLine() - food.getLine() == 0) ? 0 : -1;//S
+        else
+            inputs[14] = 0;
+        if (w != null)
+            inputs[15] = (w.getLine() - food.getLine() > 0) ? 1 : (w.getLine() - food.getLine() == 0) ? 0 : -1;//W
+        else
+            inputs[15] = 0;
+
+        forwardPropagation();
+
+        double max = output[0];
+        for (int i = 1; i < output.length; i++) {
+            if (output[i] > max) {
+                max = output[i];
+            }
+        }
+
+        if (max == output[0]) {
+            action = Action.NORTH;
+        }
+        if (max == output[1]) {
+            action = Action.EAST;
+        }
+        if (max == output[2]) {
+            action = Action.SOUTH;
+        }
+        if (max == output[3]) {
+            action = Action.WEST;
+        }
+
+        return action;
+    }
+}

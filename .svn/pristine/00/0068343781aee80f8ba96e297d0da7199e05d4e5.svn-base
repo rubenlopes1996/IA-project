@@ -1,0 +1,7 @@
+Environment size: 10
+Maximum number of iterations: 500
+Number of hidden units: 8
+Number of environment simulations: 10
+Number Inputs: 6
+Number Outputs: 8
+Snake Type: 2

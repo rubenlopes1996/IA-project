@@ -1,0 +1,23 @@
+package snake;
+
+import java.awt.*;
+
+public class Tail {
+    public static final Color COLOR = Color.PINK;
+
+    private Cell cell;
+
+    public Tail(Cell cell) {
+        this.cell = cell;
+        if (cell != null)
+            this.cell.setTail(this);
+    }
+
+    public static Color getColor() {
+        return COLOR;
+    }
+
+    public Cell getCell() {
+        return cell;
+    }
+}

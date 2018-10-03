@@ -1,0 +1,108 @@
+package snake.snakeAI;
+
+import snake.*;
+import snake.snakeAI.ga.RealVectorIndividual;
+import snake.snakeAI.nn.SnakeAIAgent;
+
+public class SnakeIndividual extends RealVectorIndividual<SnakeProblem, SnakeIndividual> {
+    SnakeAIAgent snakeAIAgent = new SnakeAIAgent(new Cell(Environment.random.nextInt(10), Environment.random.nextInt(10)), 17, 10, 4);
+    double comidasComidas = 0;
+    double movimentosMovimentados = 0;
+
+    public SnakeIndividual(SnakeProblem problem, int size /*TODO?*/) {
+        super(problem, size);
+        //TODO?
+    }
+
+    public SnakeIndividual(SnakeIndividual original) {
+        //TODO feito ?
+        super(original);
+        this.comidasComidas = original.comidasComidas;
+        this.movimentosMovimentados = original.movimentosMovimentados;
+    }
+
+    @Override
+    public double computeFitness() {
+        Environment environment = problem.getEnvironment();
+        int movimentos = 0;
+        int comidas = 0;
+        for (int i = 0; i < problem.getNumEvironmentSimulations(); i++) {
+            environment.initialize(i);
+            SnakeAIAgent agent = (SnakeAIAgent) environment.getAgents().get(0);
+            agent.setWeights(genome);
+            environment.simulate();
+
+            movimentos += environment.getNumIterations();
+            comidas += environment.getFoodEaten();
+
+
+        }
+        comidasComidas = (double) comidas / problem.getNumEvironmentSimulations();
+        movimentosMovimentados = (double) movimentos / problem.getNumEvironmentSimulations();
+        fitness = (movimentos >> 4) + (comidas << 8);
+        return fitness;
+    }
+
+    /*
+    @Override
+    public double computeFitness() {
+        //TODO
+        int iteration;
+        int numFood;
+
+        for (int i = 0; i < problem.getNumEvironmentSimulations(); i++) {
+            double fitness = 0;
+            problem.getEnvironment().placeAI(snakeAIAgent );
+            snakeAIAgent.setWeights(getGenome());
+            snakeAIAgent.forwardPropagation();
+            snakeAIAgent.decide(snakeAIAgent.buildPerception(problem.getEnvironment()));
+            problem.getEnvironment().simulateSnake(problem.getMaxIterations());
+
+            iteration = problem.getEnvironment().getNumIterations();
+            numFood = problem.getEnvironment().getFoodEaten();
+            fitness = (numFood >> 8) + (iteration << 2) ;
+        }
+
+        //para cada simulção (utilizar var de iteração com seed do random)
+            //ir ao genoma buscar os pesos da sinapses e coloca-los na RN(setWeights)
+            //mandar a snakeAi executar (decide)
+                //colocar os inputs com os valores percecionados
+                //mandar executar o forwardPropagation
+            //manda a cobra iterar o maximo x de vezes
+            //recolhe métricas(comida, iterações)
+        // atribuit e devolver a fitness
+            return fitness;
+    }
+*/
+    public double[] getGenome() {
+        //TODO
+        return genome;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\nfitness: " + fitness);
+        sb.append("\nComidas comidas: " + comidasComidas);
+        sb.append("\nMovimentos movimentados: " + movimentosMovimentados);
+        return sb.toString();
+        //Todo
+    }
+
+    /**
+     * @param i
+     * @return 1 if this object is BETTER than i, -1 if it is WORST than I and
+     * 0, otherwise.
+     */
+
+    @Override
+    public int compareTo(SnakeIndividual i) {
+        //TODO feito?
+        return Double.compare(this.fitness, i.fitness);
+    }
+
+    @Override
+    public SnakeIndividual clone() {
+        return new SnakeIndividual(this);
+    }
+}

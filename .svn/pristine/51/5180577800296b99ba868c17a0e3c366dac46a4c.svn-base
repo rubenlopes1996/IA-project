@@ -1,0 +1,171 @@
+package snake.snakeAdhoc;
+
+import snake.*;
+
+import java.awt.*;
+
+
+public class SnakeAdhocAgent extends SnakeAgent {
+
+    public SnakeAdhocAgent(Cell cell) {
+        super(cell, Color.CYAN);
+    }
+
+    public void act(Environment environment) {
+        Perception perception = buildPerception(environment);
+        Action action = decide(perception);
+        execute(action, environment);
+    }
+
+    public Cell getCell() {
+        return cell;
+    }
+
+    public void setCell(Cell cell) {
+        this.cell.setAgent(null);
+        this.cell = cell;
+        this.cell.setAgent(this);
+        this.cell.incrementNumVisited();
+
+    }
+
+    public Color getColor() {
+        return Color.BLACK;
+    }
+
+    public Action decide(Perception perception) {
+        // todo modify to improve the SnakeAdhocAgent decision process
+        Cell w = perception.getW();
+        Cell n = perception.getN();
+        Cell e = perception.getE();
+        Cell s = perception.getS();
+        Cell food = perception.getFood();
+
+        Action action = null;
+        int minNumVisited = Integer.MAX_VALUE;
+
+
+        if (w != null) {
+            if (w.hasFood()) {
+                w.setFood(null);
+                snakeBody.add(new Tail(w));
+                return Action.WEST;
+            }
+        }
+
+        if (n != null) {
+            if (n.hasFood()) {
+                n.setFood(null);
+                snakeBody.add(new Tail(n));
+                return Action.NORTH;
+            }
+        }
+
+        if (e != null) {
+            if (e.hasFood()) {
+                e.setFood(null);
+                snakeBody.add(new Tail(e));
+                return Action.EAST;
+            }
+        }
+
+        if (s != null) {
+            if (s.hasFood()) {
+                s.setFood(null);
+                snakeBody.add(new Tail(s));
+                return Action.SOUTH;
+            }
+        }
+
+
+        if (w != null && !w.hasWall() && !w.hasAgent()) {
+            /*if (w.getNumVisited() < minNumVisited) {
+                minNumVisited = w.getNumVisited();
+                action = Action.WEST;
+            }*/
+            action = foodChase(food);
+
+        }
+
+
+        if (n != null && !n.hasWall() && !n.hasAgent()) {
+            /*if (n.getNumVisited() < minNumVisited) {
+                minNumVisited = n.getNumVisited();
+                action = Action.NORTH;
+            }*/
+            action = foodChase(food);
+        }
+
+
+        if (e != null && !e.hasWall() && !e.hasAgent()) {
+            /*if (e.getNumVisited() < minNumVisited) {
+                minNumVisited = e.getNumVisited();
+                action = Action.EAST;
+            }*/
+            action = foodChase(food);
+        }
+
+
+        if (s != null && !s.hasWall() && !s.hasAgent()) {
+            /*if (s.getNumVisited() < minNumVisited) {
+                minNumVisited = s.getNumVisited();
+                action = Action.SOUTH;
+            }*/
+            action = foodChase(food);
+        }
+        return action;
+    }
+
+    private Action foodChase(Cell food){
+        Action action = null;
+        if (this.getCell().getLine() == food.getLine()) {
+            if (this.getCell().getColumn() < food.getColumn()) {
+                action = Action.EAST;
+            } else {
+                action = Action.WEST;
+            }
+        }
+
+        if (this.getCell().getLine() == food.getLine()) {
+            if (this.getCell().getColumn() > food.getColumn()) {
+                action = Action.WEST;
+            } else {
+                action = Action.EAST;
+            }
+        }
+
+        if (this.getCell().getLine() < food.getLine()) {
+            if (this.getCell().getColumn() == food.getColumn()) {
+                action = Action.NORTH;
+            } else {
+                action = Action.SOUTH;
+            }
+        }
+
+        if (this.getCell().getLine() > food.getLine()) {
+            if (this.getCell().getColumn() == food.getColumn()) {
+                action = Action.SOUTH;
+            } else {
+                action = Action.NORTH;
+            }
+        }
+
+        if (this.getCell().getColumn() == food.getColumn()){
+            if (this.getCell().getLine() > food.getLine()){
+                action = Action.NORTH;
+            } else {
+                action = Action.SOUTH;
+            }
+        }
+
+        if (this.getCell().getColumn() == food.getColumn()){
+            if (this.getCell().getLine() < food.getLine()){
+                action = Action.SOUTH;
+            } else {
+                action = Action.NORTH;
+            }
+        }
+        return action;
+    }
+}
+
